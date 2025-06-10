@@ -95,5 +95,5 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("androidx.compose.foundation:foundation:1.3.0")
-
+    implementation("androidx.compose.material:material-icons-extended")
 }
