@@ -17,4 +17,9 @@ interface OrderDao {
 
     @Query("DELETE FROM orders")
     suspend fun clearAll()
+
+    @Query("UPDATE orders SET status = :newStatus WHERE status = 'Menunggu' OR status = '' OR status IS NULL")
+    suspend fun updateStatusForAllPending(newStatus: String)
+
+
 }

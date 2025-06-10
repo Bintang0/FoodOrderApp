@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.screen.*
 import dagger.hilt.android.AndroidEntryPoint // ⬅️ Tambahkan ini
 
+
 @AndroidEntryPoint // ⬅️ Tambahkan ini
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

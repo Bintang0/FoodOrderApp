@@ -10,4 +10,9 @@ class OrderRepository @Inject constructor(private val dao: OrderDao) {
     suspend fun insert(order: OrderEntity) = dao.insert(order)
     suspend fun delete(order: OrderEntity) = dao.delete(order)
     suspend fun clearAll() = dao.clearAll()
+    suspend fun insertOrder(order: OrderEntity) = dao.insert(order)
+    suspend fun updateStatusForAllPending(newStatus: String) = dao.updateStatusForAllPending(newStatus)
+
+
+
 }

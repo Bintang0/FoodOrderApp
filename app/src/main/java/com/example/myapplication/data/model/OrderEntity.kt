@@ -8,5 +8,8 @@ data class OrderEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val menuName: String,
     val quantity: Int,
-    val price: Int
+    val price: Int,
+    val status: String = "Menunggu", // contoh default status
+    val date: String // format: "10 Juni 2025"
 )
+

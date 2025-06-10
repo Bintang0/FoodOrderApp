@@ -66,6 +66,7 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import java.text.SimpleDateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -296,7 +297,9 @@ fun MenuScreen(
                                             OrderEntity(
                                                 menuName = item.nama,
                                                 quantity = 1,
-                                                price = item.harga
+                                                price = item.harga,
+                                                status = "Preparing", // default status
+                                                date = getCurrentFormattedDate() // ganti dengan tanggal saat ini
                                             )
                                         )
                                         coroutineScope.launch {
@@ -328,6 +331,11 @@ fun MenuScreen(
             }
         }
     }
+}
+
+fun getCurrentFormattedDate(): String {
+    val formatter = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
+    return formatter.format(Date())
 }
 
 @Composable

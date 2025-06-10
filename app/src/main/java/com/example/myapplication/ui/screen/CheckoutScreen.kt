@@ -126,12 +126,14 @@ fun CheckoutScreen(
                 text = { Text("Apakah Anda yakin untuk membayar pesanan ini?") },
                 confirmButton = {
                     TextButton(onClick = {
-                        showConfirmDialog = false
-                        viewModel.clearOrders()
-                        onPaymentSuccess()
+                        viewModel.checkoutOrders {
+                            showConfirmDialog = false
+                            onPaymentSuccess()
+                        }
                     }) {
                         Text("Bayar")
                     }
+
                 },
                 dismissButton = {
                     OutlinedButton(onClick = { showConfirmDialog = false }) {
