@@ -49,7 +49,8 @@ fun AppNavigator() {
         composable("menu") {
             MenuScreen(
                 onNavigateToProfile = { navController.navigate("profile") },
-                onNavigateToCart = { navController.navigate("order") }
+                onNavigateToCart = { navController.navigate("order") },
+                onCheckoutClick = { navController.navigate("checkout") }
             )
         }
         composable("order") {
@@ -57,6 +58,15 @@ fun AppNavigator() {
         }
         composable("profile") {
             ProfileScreen(onBackClick = { navController.popBackStack() })
+        }
+
+        composable("checkout") {
+            CheckoutScreen(
+                onBackClick = { navController.popBackStack() },
+                onPaymentSuccess = {
+                    navController.navigate("order") // misal kembali ke order
+                }
+            )
         }
     }
 }

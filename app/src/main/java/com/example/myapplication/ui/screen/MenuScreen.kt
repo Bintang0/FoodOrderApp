@@ -67,7 +67,8 @@ import androidx.compose.ui.unit.dp
 fun MenuScreen(
     viewModel: MenuItemViewModel = hiltViewModel(),
     onNavigateToProfile: () -> Unit,
-    onNavigateToCart: () -> Unit
+    onNavigateToCart: () -> Unit,
+    onCheckoutClick: () -> Unit
 ) {
     val allMenuItems by viewModel.menuItems.observeAsState(emptyList())
     var selectedItem by remember { mutableStateOf<MenuItemEntity?>(null) }
@@ -285,6 +286,7 @@ fun MenuScreen(
                                             sheetState.hide()
                                             selectedItem = null
                                         }
+                                        onCheckoutClick() // ✅ navigasi ke halaman checkout
                                     },
                                     modifier = Modifier.weight(1f),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
