@@ -59,6 +59,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 
@@ -68,7 +74,9 @@ fun MenuScreen(
     viewModel: MenuItemViewModel = hiltViewModel(),
     onNavigateToProfile: () -> Unit,
     onNavigateToCart: () -> Unit,
-    onCheckoutClick: () -> Unit
+    onCheckoutClick: () -> Unit,
+    selectedTab: BottomTab,
+    onTabSelected: (BottomTab) -> Unit
 ) {
     val allMenuItems by viewModel.menuItems.observeAsState(emptyList())
     var selectedItem by remember { mutableStateOf<MenuItemEntity?>(null) }
@@ -102,10 +110,19 @@ fun MenuScreen(
 
 
     Scaffold(
+        containerColor = Color.Transparent,
+        bottomBar = {
+            FloatingBottomNavBar(
+                selectedTab = selectedTab,
+                onTabSelected = onTabSelected
+            )
+        },
         topBar = {
             Surface(
-                tonalElevation = 2.dp,
-                color = MaterialTheme.colorScheme.background
+                tonalElevation = 0.dp,
+                color = Color.Transparent, // 💡 ini penting agar tidak render warna background
+                shadowElevation = 0.dp,    // hilangkan bayangan jika tidak diinginkan
+
             ) {
                 Row(
                     modifier = Modifier
@@ -517,6 +534,60 @@ fun CategoryFilterBar(
                         else
                             MaterialTheme.colorScheme.onSurface
                     )
+                }
+            }
+        }
+    }
+}
+
+enum class BottomTab(val label: String, val icon: ImageVector) {
+    Menu("Menu", Icons.Default.Restaurant),
+    Orders("Pesanan", Icons.Default.List),
+    History("Riwayat", Icons.Default.History),
+    Profile("Profil", Icons.Default.Person)
+}
+
+@Composable
+fun FloatingBottomNavBar(
+    selectedTab: BottomTab,
+    onTabSelected: (BottomTab) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            shape = RoundedCornerShape(50),
+            color = Color.White.copy(alpha = 0.9f), // transparan lembut
+            shadowElevation = 8.dp // bayangan agar melayang
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BottomTab.values().forEach { tab ->
+                    IconButton(
+                        onClick = { onTabSelected(tab) },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = tab.icon,
+                            contentDescription = tab.label,
+                            tint = if (tab == selectedTab)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                Color.Gray,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
         }
