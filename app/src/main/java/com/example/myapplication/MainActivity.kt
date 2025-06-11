@@ -12,21 +12,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.myapplication.ui.screen.*
 import com.example.myapplication.ui.viewmodel.TableViewModel
-import dagger.hilt.android.AndroidEntryPoint // ⬅️ Tambahkan ini
+//import com.example.myapplication.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint // ⬅ Tambahkan ini
 
 
-@AndroidEntryPoint // ⬅️ Tambahkan ini
+@AndroidEntryPoint // ⬅ Tambahkan ini
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +47,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigator() {
     val navController = rememberNavController()
-
+//    val userViewModel: UserViewModel = hiltViewModel()
     // ✅ Ambil shared TableViewModel di sini
     val tableViewModel: TableViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = "scanqr") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("scanqr") {
             ScanQRScreen(
                 onScanComplete = { navController.navigate("login") },
@@ -56,10 +60,12 @@ fun AppNavigator() {
         }
         composable("login") {
             LoginScreen(
+                navController = navController,
                 onLoginSuccess = { navController.navigate("menu") },
                 onRegisterClick = { navController.navigate("register") }
             )
         }
+
         composable(route = "register") {
             RegisterScreen(
                 onRegisterSuccess = { navController.navigate("menu") },
@@ -67,11 +73,18 @@ fun AppNavigator() {
             )
         }
 
-        composable("menu") {
+        composable(
+            route = "menu?userId={userId}",
+            arguments = listOf(navArgument("userId") {
+                type = NavType.IntType
+                defaultValue = -1
+            })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId") ?: -1
             var selectedTab by rememberSaveable { mutableStateOf(BottomTab.Menu) }
 
             MenuScreen(
-                onNavigateToProfile = { navController.navigate("profile") },
+                onNavigateToProfile = { navController.navigate("profile/$userId") },
                 onNavigateToCart = { navController.navigate("order") },
                 onCheckoutClick = { navController.navigate("checkout") },
                 onNavigateToScanQR = { navController.navigate("scanqr") },
@@ -79,10 +92,10 @@ fun AppNavigator() {
                 onTabSelected = {
                     selectedTab = it
                     when (it) {
-                        BottomTab.Menu -> navController.navigate("menu")
+                        BottomTab.Menu -> navController.navigate("menu?userId=$userId")
                         BottomTab.Orders -> navController.navigate("order")
                         BottomTab.History -> navController.navigate("history")
-                        BottomTab.Profile -> navController.navigate("profile")
+                        BottomTab.Profile -> navController.navigate("profile/$userId")
                     }
                 },
                 tableViewModel = tableViewModel
@@ -91,9 +104,19 @@ fun AppNavigator() {
         composable("order") {
             OrderScreen(onBackClick = { navController.popBackStack() })
         }
-        composable("profile") {
-//            ProfileScreen(onBackClick = { navController.popBackStack() })
+        composable(
+            route = "profile/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId") ?: -1
+            Log.d("NavDebug", "Navigated with userId: $userId")
+            ProfileScreen(userId = userId)
         }
+
+
+
+
+
 
         composable("checkout") {
             CheckoutScreen(

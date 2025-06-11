@@ -14,6 +14,12 @@ interface ApiService {
     @POST("user/register")
     suspend fun registerUser(@Body request: RegisterRequest): Response<RegisterResponse>
 
+    @GET("user/{id}")
+    suspend fun getUserById(@Path("id") userId: Int): Response<UserResponse>
+
+
+
+
     // Endpoint untuk mendapatkan daftar order
     @GET("order")
     suspend fun getOrders(): Response<List<OrderResponse>>
