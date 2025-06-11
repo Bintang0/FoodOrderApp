@@ -92,11 +92,11 @@ fun AppNavigator() {
                 onTabSelected = {
                     selectedTab = it
                     when (it) {
-                        BottomTab.Menu -> navController.navigate("menu")
+                        BottomTab.Menu -> navController.navigate("menu?userId=$userId")
                         BottomTab.Orders -> navController.navigate("order")
                         BottomTab.Cart -> navController.navigate("checkout")
                         BottomTab.History -> navController.navigate("history")
-                        BottomTab.Profile -> navController.navigate("profile")
+                        BottomTab.Profile -> navController.navigate("profile/$userId")
                     }
                 },
                 tableViewModel = tableViewModel
