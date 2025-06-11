@@ -92,10 +92,11 @@ fun AppNavigator() {
                 onTabSelected = {
                     selectedTab = it
                     when (it) {
-                        BottomTab.Menu -> navController.navigate("menu?userId=$userId")
+                        BottomTab.Menu -> navController.navigate("menu")
                         BottomTab.Orders -> navController.navigate("order")
+                        BottomTab.Cart -> navController.navigate("checkout")
                         BottomTab.History -> navController.navigate("history")
-                        BottomTab.Profile -> navController.navigate("profile/$userId")
+                        BottomTab.Profile -> navController.navigate("profile")
                     }
                 },
                 tableViewModel = tableViewModel
@@ -112,11 +113,6 @@ fun AppNavigator() {
             Log.d("NavDebug", "Navigated with userId: $userId")
             ProfileScreen(userId = userId)
         }
-
-
-
-
-
 
         composable("checkout") {
             CheckoutScreen(
