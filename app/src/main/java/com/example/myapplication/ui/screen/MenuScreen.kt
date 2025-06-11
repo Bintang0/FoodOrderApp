@@ -66,7 +66,9 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.ui.viewmodel.TableViewModel
 import java.text.SimpleDateFormat
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,10 +76,12 @@ import java.text.SimpleDateFormat
 fun MenuScreen(
     viewModel: MenuItemViewModel = hiltViewModel(),
     onNavigateToProfile: () -> Unit,
+    onNavigateToScanQR: () -> Unit,
     onNavigateToCart: () -> Unit,
     onCheckoutClick: () -> Unit,
     selectedTab: BottomTab,
-    onTabSelected: (BottomTab) -> Unit
+    onTabSelected: (BottomTab) -> Unit,
+    tableViewModel: TableViewModel // tambahkan ini
 ) {
     val allMenuItems by viewModel.menuItems.observeAsState(emptyList())
     var selectedItem by remember { mutableStateOf<MenuItemEntity?>(null) }
@@ -95,6 +99,8 @@ fun MenuScreen(
     } else {
         allMenuItems.filter { it.kategori == selectedCategory }
     }
+
+    val tableNumber by tableViewModel.tableNumber.collectAsState()
 
 //    val categories = listOf("Semua") + allMenuItems.map { it.kategori }.distinct()
 
@@ -145,15 +151,26 @@ fun MenuScreen(
                         Text("New York", style = MaterialTheme.typography.bodyMedium)
                     }
 
-                    IconButton(onClick = onNavigateToProfile) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .clickable { onNavigateToScanQR() } // pindah ke halaman scan QR
+                    ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_profile), // bisa diganti avatar user
-                            contentDescription = "Profile",
+                            painter = painterResource(id = R.drawable.ic_table), // ikon meja di drawable
+                            contentDescription = "Meja",
                             modifier = Modifier
                                 .size(36.dp)
-                                .clip(RoundedCornerShape(18.dp)) // circular avatar
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Meja: ${tableNumber ?: "-"}", // nilai default jika null
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
+
                 }
             }
         }

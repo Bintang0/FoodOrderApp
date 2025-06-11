@@ -14,6 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.myapplication.ui.viewmodel.TableViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -24,25 +26,22 @@ import java.util.concurrent.Executors
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ScanQRScreen(onScanComplete: () -> Unit) {
+fun ScanQRScreen(
+    onScanComplete: () -> Unit,
+    viewModel: TableViewModel // gunakan Hilt ViewModel untuk menyimpan tableNumber
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     var scannedText by remember { mutableStateOf<String?>(null) }
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(scannedText) {
-        scannedText?.let {
-            delay(3000) // Tampilkan popup selama 3 detik
-            onScanComplete()
-        }
-    }
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             when (val status = cameraPermissionState.status) {
                 is com.google.accompanist.permissions.PermissionStatus.Granted -> {
@@ -50,11 +49,14 @@ fun ScanQRScreen(onScanComplete: () -> Unit) {
                         onCodeScanned = { code ->
                             if (scannedText == null) {
                                 scannedText = code
+                                viewModel.setTableNumber(code) // simpan ke ViewModel
+                                showDialog = true
                             }
                         },
                         lifecycleOwner = lifecycleOwner
                     )
                 }
+
                 is com.google.accompanist.permissions.PermissionStatus.Denied -> {
                     LaunchedEffect(Unit) {
                         cameraPermissionState.launchPermissionRequest()
@@ -63,18 +65,26 @@ fun ScanQRScreen(onScanComplete: () -> Unit) {
                 }
             }
 
-            // Pop-up ID Meja setelah scan berhasil
-            if (scannedText != null) {
+            // Pop-up konfirmasi
+            if (showDialog && scannedText != null) {
                 AlertDialog(
                     onDismissRequest = {},
-                    confirmButton = {},
                     title = { Text("ID Meja Terdeteksi") },
-                    text = { Text(scannedText ?: "") }
+                    text = { Text("Meja: ${scannedText ?: ""}") },
+                    confirmButton = {
+                        Button(onClick = {
+                            showDialog = false
+                            onScanComplete()
+                        }) {
+                            Text("OK")
+                        }
+                    }
                 )
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalGetImage::class)
 @Composable

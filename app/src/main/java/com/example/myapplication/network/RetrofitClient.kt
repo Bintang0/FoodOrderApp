@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.56.1:3000/api/" // ubah ke ip nodejs
+    private const val BASE_URL = "http://192.168.2.252:3000/api/" // ubah ke ip nodejs
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)

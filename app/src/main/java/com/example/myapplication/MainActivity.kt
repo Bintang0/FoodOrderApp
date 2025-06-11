@@ -17,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.screen.*
+import com.example.myapplication.ui.viewmodel.TableViewModel
 import dagger.hilt.android.AndroidEntryPoint // ⬅️ Tambahkan ini
 
 
@@ -42,10 +44,14 @@ class MainActivity : ComponentActivity() {
 fun AppNavigator() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login") {
+    // ✅ Ambil shared TableViewModel di sini
+    val tableViewModel: TableViewModel = hiltViewModel()
+
+    NavHost(navController = navController, startDestination = "scanqr") {
         composable("scanqr") {
             ScanQRScreen(
-                onScanComplete = { navController.navigate("login") }
+                onScanComplete = { navController.navigate("login") },
+                viewModel = tableViewModel // ✅ tambahkan ini
             )
         }
         composable("login") {
@@ -68,6 +74,7 @@ fun AppNavigator() {
                 onNavigateToProfile = { navController.navigate("profile") },
                 onNavigateToCart = { navController.navigate("order") },
                 onCheckoutClick = { navController.navigate("checkout") },
+                onNavigateToScanQR = { navController.navigate("scanqr") },
                 selectedTab = selectedTab,
                 onTabSelected = {
                     selectedTab = it
@@ -77,7 +84,8 @@ fun AppNavigator() {
                         BottomTab.History -> navController.navigate("history")
                         BottomTab.Profile -> navController.navigate("profile")
                     }
-                }
+                },
+                tableViewModel = tableViewModel
             )
         }
         composable("order") {
