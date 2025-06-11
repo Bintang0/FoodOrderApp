@@ -17,12 +17,13 @@ interface ApiService {
     @GET("user/{id}")
     suspend fun getUserById(@Path("id") userId: Int): Response<UserResponse>
 
-
-
-
     // Endpoint untuk mendapatkan daftar order
     @GET("order")
     suspend fun getOrders(): Response<List<OrderResponse>>
+
+    // Endpoint untuk mendapatkan history order berdasarkan user ID
+    @GET("order/history/{userId}")
+    suspend fun getOrderHistory(@Path("userId") userId: Int): Response<List<HistoryOrderResponse>>
 
     // Endpoint untuk mendapatkan detail order berdasarkan ID
     @GET("order/{id}")

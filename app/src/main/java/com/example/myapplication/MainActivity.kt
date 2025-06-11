@@ -95,7 +95,7 @@ fun AppNavigator() {
                         BottomTab.Menu -> navController.navigate("menu?userId=$userId")
                         BottomTab.Orders -> navController.navigate("order")
                         BottomTab.Cart -> navController.navigate("checkout")
-                        BottomTab.History -> navController.navigate("history")
+                        BottomTab.History -> navController.navigate("history/$userId")
                         BottomTab.Profile -> navController.navigate("profile/$userId")
                     }
                 },
@@ -105,6 +105,22 @@ fun AppNavigator() {
         composable("order") {
             OrderScreen(onBackClick = { navController.popBackStack() })
         }
+
+        // Tambahkan route untuk history
+        composable(
+            route = "history/{userId}",
+            arguments = listOf(navArgument("userId") {
+                type = NavType.IntType
+                defaultValue = 1
+            })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId") ?: 1
+            HistoryScreen(
+                userId = userId,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         composable(
             route = "profile/{userId}",
             arguments = listOf(navArgument("userId") { type = NavType.IntType })

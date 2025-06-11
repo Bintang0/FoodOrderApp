@@ -148,8 +148,8 @@ fun MenuScreen(
                     }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("location:", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-                        Text("New York", style = MaterialTheme.typography.bodyMedium)
+                        Text("Welcome,", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        Text("User", style = MaterialTheme.typography.bodyMedium)
                     }
 
                     Row(
