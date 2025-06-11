@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigator() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "scanqr") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("scanqr") {
             ScanQRScreen(
                 onScanComplete = { navController.navigate("login") }
@@ -55,10 +55,10 @@ fun AppNavigator() {
             )
         }
         composable(route = "register") {
-            RegisterScreen(
-                onRegisterSuccess = { navController.navigate("menu") },
-                onNavigateToLogin = { navController.navigate("login") }
-            )
+//            RegisterScreen(
+//                onRegisterSuccess = { navController.navigate("menu") },
+//                onNavigateToLogin = { navController.navigate("login") }
+//            )
         }
 
         composable("menu") {
@@ -84,7 +84,7 @@ fun AppNavigator() {
             OrderScreen(onBackClick = { navController.popBackStack() })
         }
         composable("profile") {
-            ProfileScreen(onBackClick = { navController.popBackStack() })
+//            ProfileScreen(onBackClick = { navController.popBackStack() })
         }
 
         composable("checkout") {

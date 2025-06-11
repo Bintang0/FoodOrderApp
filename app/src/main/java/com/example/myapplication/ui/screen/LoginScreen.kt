@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,25 +10,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.ui.viewmodel.UserViewModel
+import com.example.myapplication.ui.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: UserViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     onRegisterClick: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf<String?>(null) }
+    val errorMessage by authViewModel.errorMessage
+    val loginResponse = authViewModel.loginResult.value
+
+    // Jika login berhasil, panggil callback untuk navigasi
+    LaunchedEffect(loginResponse) {
+        loginResponse?.let {
+            onLoginSuccess()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -37,16 +41,15 @@ fun LoginScreen(
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        // 💠 Background Blur (layer bawah)
+        // Background Blur (layer bawah)
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .blur(20.dp)
-                .graphicsLayer { alpha = 0.7f }
                 .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
         )
 
-        // 🎯 Konten Login (layer atas, tidak blur)
+        // Konten Login (layer atas, tidak blur)
         Surface(
             shape = RoundedCornerShape(24.dp),
             tonalElevation = 6.dp,
@@ -70,8 +73,6 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-
-
                 RecessedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -81,20 +82,13 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-
-
-                error?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
+                if (errorMessage.isNotEmpty()) {
+                    Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
                 }
 
                 Button(
                     onClick = {
-                        val success = viewModel.login(email, password)
-                        if (success) {
-                            onLoginSuccess()
-                        } else {
-                            error = "Email atau password salah"
-                        }
+                        authViewModel.login(email, password)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp)
@@ -134,8 +128,8 @@ fun RecessedTextField(
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            focusedIndicatorColor = Color.Transparent,   // 🔥 garis bawah hilang
-            unfocusedIndicatorColor = Color.Transparent, // 🔥
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
         keyboardOptions = KeyboardOptions(
@@ -145,5 +139,3 @@ fun RecessedTextField(
         textStyle = MaterialTheme.typography.bodyLarge
     )
 }
-
-

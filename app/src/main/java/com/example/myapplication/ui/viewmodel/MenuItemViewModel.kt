@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
 import com.example.myapplication.R
 import com.example.myapplication.data.model.MenuItemEntity
-import com.example.myapplication.repository.MenuItemRepository
+import com.example.myapplication.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MenuItemViewModel @Inject constructor(
-    private val repository: MenuItemRepository
+    private val repository: FoodRepository
 ) : ViewModel() {
 
     val menuItems: LiveData<List<MenuItemEntity>> = repository.getAllMenuItems()
