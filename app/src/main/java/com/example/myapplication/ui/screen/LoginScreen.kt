@@ -97,7 +97,9 @@ fun LoginScreen(
                 }
 
                 TextButton(
-                    onClick = onRegisterClick,
+                    onClick = {
+                        onRegisterClick()
+                    },
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Text("Belum punya akun? Daftar")

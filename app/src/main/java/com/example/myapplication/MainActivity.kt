@@ -55,10 +55,10 @@ fun AppNavigator() {
             )
         }
         composable(route = "register") {
-//            RegisterScreen(
-//                onRegisterSuccess = { navController.navigate("menu") },
-//                onNavigateToLogin = { navController.navigate("login") }
-//            )
+            RegisterScreen(
+                onRegisterSuccess = { navController.navigate("menu") },
+                onNavigateToLogin = { navController.navigate("login") }
+            )
         }
 
         composable("menu") {
