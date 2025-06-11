@@ -48,7 +48,7 @@ class MenuItemViewModel @Inject constructor(
                     }
                     _menuItems.value = menuItems
 
-                    // Insert to local database
+                    // Optional: insert to local DB
                     menuItems.forEach { item ->
                         if (!repository.isExists(item.nama)) {
                             repository.insertMenuItem(item)
@@ -56,61 +56,11 @@ class MenuItemViewModel @Inject constructor(
                     }
                 } else {
                     _error.value = "Failed to load foods: ${response.code()}"
-                    // Fallback to local data or dummy data
-                    loadDummyData()
                 }
             } catch (e: Exception) {
                 _error.value = "Error: ${e.message}"
-                // Fallback to local data or dummy data
-                loadDummyData()
             } finally {
                 _isLoading.value = false
-            }
-        }
-    }
-
-    private fun loadDummyData() {
-        viewModelScope.launch {
-            val dummyItems = listOf(
-                MenuItemEntity(
-                    nama = "Nasi Goreng",
-                    harga = 15000,
-                    kategori = "Makanan",
-                    imageResId = R.drawable.nasi_goreng
-                ),
-                MenuItemEntity(
-                    nama = "Mie Ayam",
-                    harga = 12000,
-                    kategori = "Makanan",
-                    imageResId = R.drawable.mie_ayam
-                ),
-                MenuItemEntity(
-                    nama = "Es Teh",
-                    harga = 5000,
-                    kategori = "Minuman",
-                    imageResId = R.drawable.es_teh
-                ),
-                MenuItemEntity(
-                    nama = "Ayam Goreng",
-                    harga = 18000,
-                    kategori = "Makanan",
-                    imageResId = R.drawable.mie_ayam
-                ),
-                MenuItemEntity(
-                    nama = "Jus Jeruk",
-                    harga = 8000,
-                    kategori = "Minuman",
-                    imageResId = R.drawable.es_teh
-                )
-            )
-
-            _menuItems.value = dummyItems
-
-            // Insert dummy data to local database
-            dummyItems.forEach { item ->
-                if (!repository.isExists(item.nama)) {
-                    repository.insertMenuItem(item)
-                }
             }
         }
     }
