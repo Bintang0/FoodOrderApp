@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,25 +16,37 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.myapplication.ui.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel(),
     onRegisterClick: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
+    val loginResponse = authViewModel.loginResult.value
+
+
+    // 🟢 Deklarasi dulu!
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     val errorMessage by authViewModel.errorMessage
-    val loginResponse = authViewModel.loginResult.value
+
+
+
 
     // Jika login berhasil, panggil callback untuk navigasi
     LaunchedEffect(loginResponse) {
         loginResponse?.let {
-            onLoginSuccess()
+            navController.navigate("menu?userId=${it.id}")
         }
     }
+
+
+
 
     Box(
         modifier = Modifier

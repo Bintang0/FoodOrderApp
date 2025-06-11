@@ -22,3 +22,10 @@ data class RegisterResponse(
     val message: String,
     val id: Int
 )
+
+data class UserResponse(
+    val id: Int,
+    val name: String,
+    val email: String,
+    val table_number: String
+)
