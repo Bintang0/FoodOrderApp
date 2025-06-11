@@ -63,6 +63,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -568,6 +569,7 @@ fun CategoryFilterBar(
 enum class BottomTab(val label: String, val icon: ImageVector) {
     Menu("Menu", Icons.Default.Restaurant),
     Orders("Pesanan", Icons.Default.List),
+    Cart("Keranjang", Icons.Default.ShoppingCart),
     History("Riwayat", Icons.Default.History),
     Profile("Profil", Icons.Default.Person)
 }
